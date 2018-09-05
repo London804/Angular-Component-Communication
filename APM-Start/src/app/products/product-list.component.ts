@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef} from '@angular/core';
 
 import { IProduct } from './product';
 import { ProductService } from './product.service';
@@ -9,7 +9,7 @@ import { ProductService } from './product.service';
 })
 export class ProductListComponent implements OnInit {
     pageTitle: string = 'Product List';
-    listFilter: string;
+    // listFilter: string;
     showImage: boolean;
 
     imageWidth: number = 50;
@@ -19,17 +19,45 @@ export class ProductListComponent implements OnInit {
     filteredProducts: IProduct[];
     products: IProduct[];
 
-    constructor(private productService: ProductService) { }
+    @ViewChild('filterElement') filterElementRef:ElementRef; // this allows you to use access the DOM HTML properties/methods on the element
+
+    ngAfterViewInit(): void {
+        // It's good to check for existence before using 
+        if(this.filterElementRef.nativeElement) {
+           this.filterElementRef.nativeElement.focus();
+        }    
+        console.log('filterElementRef', this.filterElementRef);
+    }
+    // the getter setter method allows you to filter the products 
+    private _listFilter: string;
+    get listFilter(): string {
+        return this._listFilter;
+    }
+
+    set listFilter(value: string) {
+        this._listFilter = value;
+        this.performFilter(this.listFilter);
+    }
+
+    constructor(private productService: ProductService) { 
+    }
 
     ngOnInit(): void {
         this.productService.getProducts().subscribe(
             (products: IProduct[]) => {
                 this.products = products;
                 this.performFilter(this.listFilter);
+                console.log('listFilter', this.listFilter);
             },
             (error: any) => this.errorMessage = <any>error
         );
     }
+
+    // Angular does this for you behind the scenes
+    // onFilterChange(filter: string): void {
+    //     this.listFilter = filter;
+    //     this.performFilter(this.listFilter);
+    // }
 
     toggleImage(): void {
         this.showImage = !this.showImage;
