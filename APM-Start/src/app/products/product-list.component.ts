@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef} from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, ElementRef, QueryList} from '@angular/core';
 
 import { IProduct } from './product';
 import { ProductService } from './product.service';
+import { NgModel } from '@angular/forms';
 
 @Component({
     templateUrl: './product-list.component.html',
@@ -19,16 +20,14 @@ export class ProductListComponent implements OnInit {
     filteredProducts: IProduct[];
     products: IProduct[];
 
+    // first way to filter the input
     @ViewChild('filterElement') filterElementRef:ElementRef; // this allows you to use access the DOM HTML properties/methods on the element
+    // @ViewChildren(NgModel) inputElementRefs: QueryList<ElementRef>; // same thing just several
 
-    ngAfterViewInit(): void {
-        // It's good to check for existence before using 
-        if(this.filterElementRef.nativeElement) {
-           this.filterElementRef.nativeElement.focus();
-        }    
-        console.log('filterElementRef', this.filterElementRef);
-    }
-    // the getter setter method allows you to filter the products 
+    // the third way to filter the input is to use viewChild with ngModel
+    // @ViewChild(NgModel) filterInput:NgModel;
+
+    // the getter setter method also allows you to filter the products 
     private _listFilter: string;
     get listFilter(): string {
         return this._listFilter;
@@ -37,6 +36,20 @@ export class ProductListComponent implements OnInit {
     set listFilter(value: string) {
         this._listFilter = value;
         this.performFilter(this.listFilter);
+    }
+
+     
+    ngAfterViewInit(): void {
+        // It's good to check for existence before using 
+        if(this.filterElementRef.nativeElement) {
+           this.filterElementRef.nativeElement.focus();
+        }    
+        console.log('filterElementRef', this.filterElementRef);
+
+        // works with the @ViewChild(NgModel)
+        // this.filterInput.valueChanges.subscribe(() => 
+        //     this.performFilter(this.listFilter)
+        // );
     }
 
     constructor(private productService: ProductService) { 
