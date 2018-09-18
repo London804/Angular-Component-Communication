@@ -70,6 +70,10 @@ export class ProductListComponent implements OnInit {
 
     }
 
+    onValueChange(value: string): void {
+        this.performFilter(value);
+    }
+
     // Angular does this for you behind the scenes
     // onFilterChange(filter: string): void {
     //     this.listFilter = filter;

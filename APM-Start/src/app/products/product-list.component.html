@@ -36,9 +36,10 @@
 
         <div class="row">
             <!--#filterCriteria allows you to access child coomponents variables and methods -->
-            <pm-criteria class="col-md-10" #filterCriteria> 
+            <pm-criteria class="col-md-10" #filterCriteria
                 [displayDetail]='includeDetail'
                 [hitCount]='filteredProducts?.length'
+                (valueChange)="onValueChange($event)">
             </pm-criteria>
             {{filterCriteria.listFilter}}
         </div>
