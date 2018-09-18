@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable,  OnInit, } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -14,6 +14,7 @@ export class ProductService {
     private productsUrl = 'api/products';
 
     constructor(private http: HttpClient) { }
+
 
     getProducts(): Observable<IProduct[]> {
         return this.http.get<IProduct[]>(this.productsUrl)
