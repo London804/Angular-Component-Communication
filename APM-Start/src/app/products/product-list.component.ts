@@ -2,6 +2,10 @@ import { Component, OnInit, ViewChild, ViewChildren, AfterViewInit, ElementRef, 
 
 import { IProduct } from './product';
 import { ProductService } from './product.service';
+import { ProductParameterService } from './product-parameter.service';
+import { CriteriaComponent } from '../shared/criteria/criteria.component';
+
+
 import { NgModel } from '@angular/forms';
 
 @Component({
@@ -11,7 +15,7 @@ import { NgModel } from '@angular/forms';
 export class ProductListComponent implements OnInit {
     pageTitle: string = 'Product List';
     // listFilter: string;
-    showImage: boolean;
+    // showImage: boolean;
 
     imageWidth: number = 50;
     imageMargin: number = 2;
@@ -21,6 +25,17 @@ export class ProductListComponent implements OnInit {
     products: IProduct[];
 
     includeDetail: boolean = true;
+
+    @ViewChild(CriteriaComponent) filterComponent: CriteriaComponent
+
+// this allows you to store the Image setting when you negative away from the page
+    get showImage(): boolean {
+        return this.productParameterService.showImage;
+    }
+
+    set showImage(value: boolean) {
+        this.productParameterService.showImage = value
+    }
 
     // first way to filter the input
     // @ViewChild('filterElement') filterElementRef:ElementRef; // this allows you to use access the DOM HTML properties/methods on the element
@@ -53,7 +68,9 @@ export class ProductListComponent implements OnInit {
     //     // );
     // }
 
-    constructor(private productService: ProductService) {
+    constructor(
+        private productService: ProductService
+        private productParameterService: ProductParameterService) {
     }
 
     ngOnInit(): void {
@@ -61,16 +78,19 @@ export class ProductListComponent implements OnInit {
             (products: IProduct[]) => {
                 this.products = products;
                 console.log(this.products);
-                this.performFilter(this.listFilter);
-                console.log('listFilter', this.listFilter);
+                // this.performFilter(this.listFilter);
+                // console.log('listFilter', this.listFilter);
+                this.filterComponent.listFilter = this.productParameterService.filterBy;
             },
             (error: any) => this.errorMessage = <any>error
         );
 
 
+
     }
 
     onValueChange(value: string): void {
+        this.productParameterService.filterBy = value;
         this.performFilter(value);
     }
 
