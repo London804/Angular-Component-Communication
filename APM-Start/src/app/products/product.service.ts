@@ -12,14 +12,20 @@ import { IProduct } from './product';
 @Injectable()
 export class ProductService {
     private productsUrl = 'api/products';
+    private products: IProduct[];
 
     constructor(private http: HttpClient) { }
 
 
     getProducts(): Observable<IProduct[]> {
+        if(this.products) {
+            return of(this.products);
+        }
+
         return this.http.get<IProduct[]>(this.productsUrl)
                         .pipe(
                             tap(data => console.log(JSON.stringify(data))),
+                            tap(data => this.products = data),
                             catchError(this.handleError)
                         );
     }

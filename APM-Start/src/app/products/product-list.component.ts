@@ -28,7 +28,7 @@ export class ProductListComponent implements OnInit {
 
     @ViewChild(CriteriaComponent) filterComponent: CriteriaComponent
 
-// this allows you to store the Image setting when you negative away from the page
+// *this allows you to store the Image setting when you negative away from the page
     get showImage(): boolean {
         return this.productParameterService.showImage;
     }
@@ -69,7 +69,7 @@ export class ProductListComponent implements OnInit {
     // }
 
     constructor(
-        private productService: ProductService
+        private productService: ProductService,
         private productParameterService: ProductParameterService) {
     }
 
